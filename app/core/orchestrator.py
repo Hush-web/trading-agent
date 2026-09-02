@@ -10,7 +10,7 @@ from app.agents.portfolio_manager import PortfolioManager
 from app.agents.risk_manager import RiskManager
 from app.services.telegram import TelegramService
 
-# Handle START import gracefully
+# Handle START import gracefully for older LangGraph versions
 try:
     from langgraph.graph import START
 except ImportError:
