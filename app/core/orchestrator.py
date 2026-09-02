@@ -10,6 +10,12 @@ from app.agents.portfolio_manager import PortfolioManager
 from app.agents.risk_manager import RiskManager
 from app.services.telegram import TelegramService
 
+def get_step(state):
+    """Safely get the step value from either dict or AgentState."""
+    if isinstance(state, dict):
+        return state.get("step")
+    return state.step
+
 class TradingOrchestrator:
     """Orchestrates the multi-agent trading workflow."""
     
@@ -37,23 +43,23 @@ class TradingOrchestrator:
         
         builder.add_conditional_edges(
             "collect_data",
-            lambda state: "analyze_technical" if state.get("step") != "failed" else END
+            lambda state: "analyze_technical" if get_step(state) != "failed" else END
         )
         builder.add_conditional_edges(
             "analyze_technical",
-            lambda state: "analyze_sentiment" if state.get("step") != "failed" else END
+            lambda state: "analyze_sentiment" if get_step(state) != "failed" else END
         )
         builder.add_conditional_edges(
             "analyze_sentiment",
-            lambda state: "make_decision" if state.get("step") != "failed" else END
+            lambda state: "make_decision" if get_step(state) != "failed" else END
         )
         builder.add_conditional_edges(
             "make_decision",
-            lambda state: "check_risk" if state.get("step") != "failed" else END
+            lambda state: "check_risk" if get_step(state) != "failed" else END
         )
         builder.add_conditional_edges(
             "check_risk",
-            lambda state: END if state.get("step") != "failed" else END
+            lambda state: END if get_step(state) != "failed" else END
         )
         
         return builder.compile()
@@ -62,22 +68,22 @@ class TradingOrchestrator:
         return self.data_collector.run(state)
     
     def _analyze_technical(self, state: AgentState) -> dict:
-        if state.get("step") == "failed":
+        if get_step(state) == "failed":
             return {"step": "failed"}
         return self.technical_analyst.run(state)
     
     def _analyze_sentiment(self, state: AgentState) -> dict:
-        if state.get("step") == "failed":
+        if get_step(state) == "failed":
             return {"step": "failed"}
         return self.sentiment_analyst.run(state)
     
     def _make_decision(self, state: AgentState) -> dict:
-        if state.get("step") == "failed":
+        if get_step(state) == "failed":
             return {"step": "failed"}
         return self.portfolio_manager.run(state)
     
     def _check_risk(self, state: AgentState) -> dict:
-        if state.get("step") == "failed":
+        if get_step(state) == "failed":
             return {"step": "failed"}
         return self.risk_manager.run(state)
     
