@@ -7,10 +7,10 @@ from app.models.trade import MarketData, AgentState
 class DataCollector:
     """Fetches real-time market data from exchanges."""
     
-    def __init__(self, exchange_id="binance"):
-        self.exchange = getattr(ccxt, exchange_id)({
-            'enableRateLimit': True,
-        })
+   def __init__(self, exchange_id="kraken"):
+    self.exchange = getattr(ccxt, exchange_id)({
+        'enableRateLimit': True,
+    })
     
     def fetch_market_data(self, symbol: str) -> MarketData:
         """Fetch current market data for a symbol."""
