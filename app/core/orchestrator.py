@@ -1,4 +1,4 @@
-from typing import Literal
+﻿from typing import Literal
 from langgraph.graph import StateGraph, END
 from loguru import logger
 
@@ -34,26 +34,26 @@ class TradingOrchestrator:
         
         builder.set_entry_point("collect_data")
         
-        # Use state.step (not state.get)
+        # Use state.get("step") for dictionary compatibility
         builder.add_conditional_edges(
             "collect_data",
-            lambda state: "analyze_technical" if state.step != "failed" else END
+            lambda state: "analyze_technical" if state.get("step") != "failed" else END
         )
         builder.add_conditional_edges(
             "analyze_technical",
-            lambda state: "analyze_sentiment" if state.step != "failed" else END
+            lambda state: "analyze_sentiment" if state.get("step") != "failed" else END
         )
         builder.add_conditional_edges(
             "analyze_sentiment",
-            lambda state: "make_decision" if state.step != "failed" else END
+            lambda state: "make_decision" if state.get("step") != "failed" else END
         )
         builder.add_conditional_edges(
             "make_decision",
-            lambda state: "check_risk" if state.step != "failed" else END
+            lambda state: "check_risk" if state.get("step") != "failed" else END
         )
         builder.add_conditional_edges(
             "check_risk",
-            lambda state: END if state.step != "failed" else END
+            lambda state: END if state.get("step") != "failed" else END
         )
         
         return builder.compile()
@@ -62,22 +62,22 @@ class TradingOrchestrator:
         return self.data_collector.run(state)
     
     def _analyze_technical(self, state: AgentState) -> dict:
-        if state.step == "failed":
+        if state.get("step") == "failed" if isinstance(state, dict) else state.step == "failed":
             return {"step": "failed"}
         return self.technical_analyst.run(state)
     
     def _analyze_sentiment(self, state: AgentState) -> dict:
-        if state.step == "failed":
+        if state.get("step") == "failed" if isinstance(state, dict) else state.step == "failed":
             return {"step": "failed"}
         return self.sentiment_analyst.run(state)
     
     def _make_decision(self, state: AgentState) -> dict:
-        if state.step == "failed":
+        if state.get("step") == "failed" if isinstance(state, dict) else state.step == "failed":
             return {"step": "failed"}
         return self.portfolio_manager.run(state)
     
     def _check_risk(self, state: AgentState) -> dict:
-        if state.step == "failed":
+        if state.get("step") == "failed" if isinstance(state, dict) else state.step == "failed":
             return {"step": "failed"}
         return self.risk_manager.run(state)
     
