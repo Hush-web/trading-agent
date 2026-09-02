@@ -10,14 +10,6 @@ from app.agents.portfolio_manager import PortfolioManager
 from app.agents.risk_manager import RiskManager
 from app.services.telegram import TelegramService
 
-# Try to import START, fallback to using set_entry_point
-try:
-    from langgraph.graph import START
-    HAS_START = True
-except ImportError:
-    HAS_START = False
-    START = None
-
 class TradingOrchestrator:
     """Orchestrates the multi-agent trading workflow."""
     
@@ -43,11 +35,8 @@ class TradingOrchestrator:
         builder.add_node("make_decision", self._make_decision)
         builder.add_node("check_risk", self._check_risk)
         
-        # Set entry point: use START constant if available, otherwise use set_entry_point
-        if HAS_START:
-            builder.add_edge(START, "collect_data")
-        else:
-            builder.set_entry_point("collect_data")
+        # Set the entry point directly (compatible with all LangGraph versions)
+        builder.set_entry_point("collect_data")
         
         # Conditional edges: route to END on failure
         builder.add_conditional_edges(
