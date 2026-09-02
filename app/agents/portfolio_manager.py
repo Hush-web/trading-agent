@@ -16,22 +16,22 @@ class PortfolioManager:
     def make_decision(self, state: AgentState) -> TradeDecision:
         """Make a trading decision based on all available data."""
         system_prompt = """You are a senior portfolio manager. Based on the technical analysis and sentiment analysis provided, make a trading decision.
-        
-        Return your response in this exact format:
-        
-        SIGNAL: [BUY, SELL, or HOLD]
-        CONFIDENCE: [number between 0 and 1]
-        REASON: [2-3 sentences explaining your decision]
-        ENTRY_PRICE: [price or N/A]
-        STOP_LOSS: [price or N/A]
-        TAKE_PROFIT: [price or N/A]
-        POSITION_SIZE: [USDT amount or N/A]
-        
-        Rules:
-        - Only trade when confidence is above 0.6
-        - Consider risk-reward ratio (minimum 1:2)
-        - Be conservative - capital preservation is priority"""
-        
+
+Return your response in this exact format:
+
+SIGNAL: [BUY, SELL, or HOLD]
+CONFIDENCE: [number between 0 and 1]
+REASON: [2-3 sentences explaining your decision]
+ENTRY_PRICE: [price or N/A]
+STOP_LOSS: [price or N/A]
+TAKE_PROFIT: [price or N/A]
+POSITION_SIZE: [USDT amount or N/A]
+
+Rules:
+- Only trade when confidence is above 0.5 (lowered from 0.6)
+- Consider risk-reward ratio (minimum 1:1.5)
+- Be moderately aggressive - look for opportunities
+"""
         user_prompt = f"""
         Symbol: {state.symbol}
         Current Price: ${state.market_data.price:,.2f}
