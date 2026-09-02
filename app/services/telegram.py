@@ -1,6 +1,7 @@
 import requests
 import os
 from loguru import logger
+from datetime import datetime
 
 class TelegramService:
     """Service to send messages to Telegram."""
@@ -78,8 +79,6 @@ Reason: {decision.reason[:300]}...
         if decision.position_size:
             message += f"\n<b>📊 POSITION SIZE:</b> ${decision.position_size:.2f}"
         
-        # Add timestamp
-        from datetime import datetime
         message += f"\n\n📅 {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
         
         return message
