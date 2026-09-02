@@ -8,7 +8,7 @@ on:
 jobs:
   run-signal:
     runs-on: ubuntu-latest
-    environment: private   # <-- ADD THIS LINE
+    environment: private
     
     steps:
     - name: Checkout code
@@ -22,13 +22,12 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install langgraph==0.0.23
         pip install -r requirements.txt
     
-    - name: Run trading signal
+    - name: Run trading signal (all pairs)
       env:
         GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       run: |
-        python run.py
+        python github_scan.py
