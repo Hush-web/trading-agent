@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: trading-bot-telegram
+    runtime: python
+    repo: https://github.com/Hush-web/trading-agent
+    plan: free
+    branch: main
+    buildCommand: pip install -r requirements.txt
+    startCommand: python telegram_bot.py
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+
+  - type: worker
+    name: trading-bot-worker
+    runtime: python
+    repo: https://github.com/Hush-web/trading-agent
+    plan: free
+    branch: main
+    buildCommand: pip install -r requirements.txt
+    startCommand: python run_247.py
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false

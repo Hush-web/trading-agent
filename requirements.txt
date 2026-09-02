@@ -10,3 +10,6 @@ pandas==2.2.2
 yfinance==0.2.33
 loguru==0.7.2
 requests==2.31.0
+flask
+requests
+ccxt
