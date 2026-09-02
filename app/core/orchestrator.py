@@ -1,5 +1,5 @@
 from typing import Literal
-from langgraph.graph import StateGraph, START, END
+from langgraph.graph import StateGraph, END
 from loguru import logger
 
 from app.models.trade import AgentState
@@ -8,7 +8,14 @@ from app.agents.technical_analyst import TechnicalAnalyst
 from app.agents.sentiment_analyst import SentimentAnalyst
 from app.agents.portfolio_manager import PortfolioManager
 from app.agents.risk_manager import RiskManager
-from app.services.telegram import TelegramService  # <-- Add this import
+from app.services.telegram import TelegramService
+
+# Handle START import gracefully
+try:
+    from langgraph.graph import START
+except ImportError:
+    # In older versions, START is not exported; use string
+    START = "__start__"
 
 class TradingOrchestrator:
     """Orchestrates the multi-agent trading workflow."""
